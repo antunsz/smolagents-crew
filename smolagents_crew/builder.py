@@ -55,12 +55,12 @@ class CrewBuilder:
             print("   No tasks defined")
         for task in self.tasks:
             print(f"   • {task.name}")
-            if task.agent_name:
-                print(f"     ├─ Agent: {task.agent_name}")
+            if task.agent.name:
+                print(f"     ├─ Agent: {task.agent.name}")
             if task.dependencies:
                 print("     ├─ Dependencies:")
                 for dep in task.dependencies:
-                    print(f"     │  └─ {dep.task_name} (uses {dep.result_key})")
+                    print(f"     │  └─ {dep.source_task} (uses {dep.result_key})")
             print("     └─ Result Key: {}".format(task.result_key or 'None'))
         print()
 
