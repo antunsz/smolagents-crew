@@ -1,6 +1,6 @@
 # 🤖 SmolagentsCrew
 
-Orchestrate your AI dream team! 🚀 A powerful framework built on top of [smolagents](https://github.com/huggingface/smolagents) from Hugging Face that brings multiple AI agents together to collaborate efficiently through smart threading and dependency management.
+Orchestrate your AI dream team! 🚀 A framework built on top of [smolagents](https://github.com/huggingface/smolagents) from Hugging Face that brings multiple AI agents together to collaborate efficiently through smart threading and dependency management.
 
 SmolagentsCrew serves as an orchestration layer that allows you to coordinate multiple smolagents, enabling them to work together on complex tasks while handling dependencies, parallel execution, and context sharing automatically.
 
@@ -66,7 +66,7 @@ results = crew.execute()
 
 ### Using the Builder Pattern
 
-SmolagentsCrew provides a powerful builder pattern that simplifies the process of creating and configuring complex agent workflows. The builder pattern allows you to:
+SmolagentsCrew provides a builder pattern that simplifies the process of creating and configuring complex agent workflows. The builder pattern allows you to:
 
 - Construct crews step by step with clear, readable code
 - Validate agent configurations and dependencies automatically
