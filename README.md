@@ -14,15 +14,17 @@ SmolagentsCrew serves as an orchestration layer that allows you to coordinate mu
 
 ## 📦 Installation
 
-Currently, you can install SmolagentsCrew locally from the repository:
+You can install SmolagentsCrew directly from PyPI using your preferred package manager. We recommend using `uv` for its superior performance and dependency resolution:
 
 ```bash
-git clone https://github.com/antunsz/smolagents-crew.git
-cd smolagents-crew
-pip install -e .
+# Using uv (Recommended) 🚀
+uv pip install smolagents-crew
+
+# Using pip
+pip install smolagents-crew
 ```
 
-> 🔥 Coming Soon: SmolagentsCrew will be available on PyPI! Stay tuned for a simpler installation via `pip install smolagents-crew`
+> 💡 Why uv? It's significantly faster than pip and provides better dependency resolution. Learn more at [uv.github.io](https://uv.github.io)
 
 ## 🚀 Quick Start
 
