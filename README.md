@@ -24,7 +24,7 @@ uv pip install smolagents-crew
 pip install smolagents-crew
 ```
 
-> 💡 Why uv? It's significantly faster than pip and provides better dependency resolution. Learn more at [uv.github.io](https://uv.github.io)
+> 💡 Why uv? It's significantly faster than pip and provides better dependency resolution. Learn more at [the uv repo](https://github.com/astral-sh/uv)
 
 ## 🚀 Quick Start
 
