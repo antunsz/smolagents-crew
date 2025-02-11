@@ -1,5 +1,7 @@
 # 🤖 SmolagentsCrew
 
+> ⚠️ **Disclaimer**: This is an independent project that uses [smolagents](https://github.com/huggingface/smolagents) from Hugging Face but is not an official part of the Hugging Face ecosystem.
+
 Orchestrate your AI dream team! 🚀 A framework built on top of [smolagents](https://github.com/huggingface/smolagents) from Hugging Face that brings multiple AI agents together to collaborate efficiently through smart threading and dependency management.
 
 SmolagentsCrew serves as an orchestration layer that allows you to coordinate multiple smolagents, enabling them to work together on complex tasks while handling dependencies, parallel execution, and context sharing automatically.
