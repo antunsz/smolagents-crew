@@ -64,6 +64,49 @@ results = crew.execute()
 
 ## 🔧 Advanced Usage
 
+### Task Execution Evaluation
+
+SmolagentsCrew includes a evaluation system that helps you track and analyze task execution performance. You can enable evaluation to:
+
+- Monitor task execution times
+- Track parallel execution patterns
+- Analyze task dependencies
+- Generate detailed execution reports
+
+Here's how to use the evaluation feature:
+
+```python
+# Enable evaluation when executing the crew
+results = crew.execute(evaluate=True)
+
+# The execution report will be automatically printed, showing:
+# - Total execution time
+# - Individual task execution times
+# - Agent assignments
+# - Task dependencies
+# - Parallel execution groups
+```
+
+Example output:
+```
+Crew Execution Report
+--------------------
+Total Execution Time: 15.42 seconds
+
+Task Execution Details:
+Task: research_topic
+Agent: researcher
+Execution Time: 8.31 seconds
+
+Task: write_article
+Agent: writer
+Execution Time: 7.11 seconds
+Dependencies: research_topic
+
+Parallel Execution Groups:
+research_topic ran in parallel with: write_article
+```
+
 ### Using the Builder Pattern
 
 SmolagentsCrew provides a builder pattern that simplifies the process of creating and configuring complex agent workflows. The builder pattern allows you to:
@@ -138,6 +181,50 @@ results = crew.execute()
 print("\nFinal Article:")
 print(results["final_article"])
 ```
+
+### Advanced Crew Building
+
+SmolagentsCrew provides a builder pattern for creating complex agent crews. The `CrewBuilder` class offers advanced features for orchestrating sophisticated multi-agent workflows:
+
+```python
+from smolagents_crew import CrewBuilder
+
+# Create a crew using the builder pattern
+builder = CrewBuilder()
+
+# Add agents
+builder.add_agent("researcher", researcher_agent)
+       .add_agent("writer", writer_agent)
+       .add_agent("editor", editor_agent)
+
+# Create a chain of dependent tasks
+builder.add_task_chain([
+    research_task,    # First task
+    writing_task,     # Automatically depends on research_task
+    editing_task     # Automatically depends on writing_task
+])
+
+# Add shared context
+builder.add_shared_context("topic", "AI Agents")
+
+# Validate the crew configuration
+builder.validate_crew()
+
+# Print the crew structure
+builder.print_crew()
+
+# Build and execute
+crew = builder.build()
+results = crew.execute(evaluate=True)
+```
+
+Key features of advanced crew building:
+
+- 🔗 **Task Chaining**: Automatically create linear task dependencies
+- ✅ **Crew Validation**: Detect issues like circular dependencies or missing components
+- 🎯 **Shared Context**: Easily manage data shared between tasks
+- 📊 **Visual Structure**: Print a clear overview of your crew's configuration
+- 🔄 **Fluent Interface**: Chain method calls for cleaner code
 
 ## 🤝 Contributing
 
