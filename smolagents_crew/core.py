@@ -116,6 +116,7 @@ class Crew:
         self.context = initial_context.copy()
         self.lock = threading.Lock()
         self.completed_tasks = []
+        self.evaluator = None
 
     def _task_runner(self, task: Task):
         try:
@@ -127,14 +128,22 @@ class Crew:
 
             with self.lock:
                 self.completed_tasks.append(task.name)
+                if self.evaluator:
+                    self.evaluator.record_task_end(task.name)
                 print(f"✅ Task completed: {task.name}")
 
         except Exception as e:
             print(f"❌ Error in task {task.name}: {str(e)}")
 
-    def execute(self):
+    def execute(self, evaluate: bool = False):
+        from .utils.evaluation import CrewEvaluator
+        
         threads = []
         remaining_tasks = self.tasks.copy()
+
+        if evaluate:
+            self.evaluator = CrewEvaluator()
+            self.evaluator.start_evaluation()
 
         while remaining_tasks:
             current_batch = []
@@ -149,12 +158,22 @@ class Crew:
                 break
 
             for task in current_batch:
+                if self.evaluator:
+                    self.evaluator.record_task_start(
+                        task.name,
+                        task.agent.name,
+                        [dep.source_task for dep in task.dependencies]
+                    )
                 thread = threading.Thread(target=self._task_runner, args=(task,))
                 threads.append(thread)
                 thread.start()
 
             for thread in threads:
                 thread.join()
+
+        if self.evaluator:
+            self.evaluator.end_evaluation()
+            print(self.evaluator.generate_execution_report())
 
         print("\n🏁 All tasks completed!")
         return self.context

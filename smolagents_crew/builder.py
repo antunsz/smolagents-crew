@@ -1,11 +1,12 @@
 from typing import Dict, List
-from .core import Crew, Agent, Task
+from .core import Crew, Agent, Task, TaskDependency
 
 class CrewBuilder:
     """Builder for creating complex crews.
 
     This class provides a fluent interface for constructing Crew instances
-    with multiple agents, tasks, and shared context.
+    with multiple agents, tasks, and shared context. It includes advanced features
+    such as task chain creation and crew validation.
 
     Attributes:
         agents (Dict[str, Agent]): Dictionary of registered agents.
@@ -74,17 +75,7 @@ class CrewBuilder:
 
         return self
 
-    def build(self) -> Crew:
-        return Crew(self.agents, self.tasks, self.shared_context)
-
-class AdvancedCrewBuilder(CrewBuilder):
-    """Extends CrewBuilder with additional functionality.
-
-    This class adds advanced features for crew construction, such as
-    task chain creation and crew validation.
-    """
-    
-    def add_task_chain(self, tasks: List[Task]) -> 'AdvancedCrewBuilder':
+    def add_task_chain(self, tasks: List[Task]) -> 'CrewBuilder':
         """Adds a sequence of tasks with linear dependencies.
 
         This method automatically creates dependencies between consecutive tasks,
@@ -94,22 +85,24 @@ class AdvancedCrewBuilder(CrewBuilder):
             tasks (List[Task]): List of tasks to chain together.
 
         Returns:
-            AdvancedCrewBuilder: The builder instance for method chaining.
+            CrewBuilder: The builder instance for method chaining.
         """
         for i in range(1, len(tasks)):
             tasks[i].dependencies.append(
                 TaskDependency(tasks[i-1].name, tasks[i-1].result_key)
             )
-        return self.add_tasks(tasks)
+        for task in tasks:
+            self.add_task(task)
+        return self
     
-    def validate_crew(self) -> 'AdvancedCrewBuilder':
+    def validate_crew(self) -> 'CrewBuilder':
         """Performs early validation of the crew structure.
 
         This method checks for potential issues in the crew configuration,
         such as circular dependencies or missing required components.
 
         Returns:
-            AdvancedCrewBuilder: The builder instance for method chaining.
+            CrewBuilder: The builder instance for method chaining.
 
         Raises:
             ValueError: If validation fails due to circular dependencies,
@@ -156,3 +149,6 @@ class AdvancedCrewBuilder(CrewBuilder):
                     raise ValueError(f"Missing result key in dependency for task: {task.name}")
 
         return self
+
+    def build(self) -> Crew:
+        return Crew(self.agents, self.tasks, self.shared_context)
