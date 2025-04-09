@@ -24,6 +24,9 @@ uv pip install smolagents-crew
 
 # Using pip
 pip install smolagents-crew
+
+# With visualization support
+pip install smolagents-crew[viz]
 ```
 
 > 💡 Why uv? It's significantly faster than pip and provides better dependency resolution. Learn more at [the uv repo](https://github.com/astral-sh/uv)
@@ -323,14 +326,14 @@ SmolagentsCrew supports distributed task execution through its swarm functionali
 
 ```python
 from smolagents_crew.core import Agent, Task
-from smolagents_crew.swarm import SwarmManager, SwarmNode, serve
+from smolagents_crew.swarm import SwarmCrew, SwarmNode, serve
 
 # Create your agents
 agent1 = SimpleAgent("agent1")
 agent2 = SimpleAgent("agent2")
 
 # Set up the SwarmManager
-manager = SwarmManager()
+swarm_crew = SwarmCrew()
 
 # Create and register nodes with different agents
 node1 = SwarmNode("node1", {"agent1": agent1})
@@ -362,7 +365,7 @@ task2 = Task(
 manager.submit_task(task1)
 manager.submit_task(task2)
 
-# The SwarmManager ensures tasks are executed in the correct order
+# O SwarmCrew garante a execução ordenada das tarefas
 # by tracking dependencies and coordinating across nodes.
 # In this case, task2 will only start after task1 is complete,
 # even if they're running on different nodes.
@@ -375,6 +378,46 @@ manager.submit_task(task2)
 - 🔗 **Dependency Management**: Maintains task dependencies across distributed nodes
 - 📊 **Status Monitoring**: Track task execution status across the swarm
 - 🛡️ **Fault Tolerance**: Handles node failures and task retries
+- 🎨 **Flow Visualization**: Generate interactive workflow diagrams and text-based representations
+
+#### Visualization Features 🌐
+
+```python
+# Text-based workflow visualization
+print(swarm_crew.print_swarm_flow())
+
+# Graphical visualization (requires optional dependencies)
+swarm_crew.visualize_swarm_flow(
+    save_path='fluxo_swarm.png',
+    mostrar=True,
+    estilo_fluxo='processo'  # Opções: 'processo' ou 'sistema'
+)
+```
+
+##### Installation with Visualization Support
+```bash
+pip install smolagents-crew[viz]  # Instala networkx e matplotlib automaticamente
+```
+- 🎨 **Flow Visualization**: Generate interactive workflow diagrams and text-based representations
+
+#### Visualization Features 🌐
+
+```python
+# Text-based workflow visualization
+print(swarm_crew.print_swarm_flow())
+
+# Graphical visualization (requires optional dependencies)
+swarm_crew.visualize_swarm_flow(
+    save_path='fluxo_swarm.png',
+    mostrar=True,
+    estilo_fluxo='processo'  # Opções: 'processo' ou 'sistema'
+)
+```
+
+##### Installation with Visualization Support
+```bash
+pip install smolagents-crew[viz]  # Instala networkx e matplotlib automaticamente
+```
 
 #### Using SwarmCrew
 
