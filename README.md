@@ -66,6 +66,85 @@ crew = Crew(
 results = crew.execute()
 ```
 
+### Complex Task Management Example
+
+Here's an example demonstrating more complex task dependencies and parallel execution patterns:
+
+```python
+from smolagents_crew import Agent, Task, Crew, TaskDependency
+from smolagents import CodeAgent, OpenAIServerModel
+
+# Create specialized agents
+agent_a = Agent("data_collector", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4'))
+agent_b = Agent("analyzer", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4'))
+agent_c = Agent("researcher", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4'))
+agent_d = Agent("summarizer", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4'))
+
+# Task A: Collect initial data
+task_a = Task(
+    name="collect_data",
+    agent=agent_a,
+    prompt_template="Collect data about {topic}",
+    result_key="raw_data"
+)
+
+# Task B: Analyze data (depends on A)
+task_b = Task(
+    name="analyze_data",
+    agent=agent_b,
+    prompt_template="Analyze this data: {raw_data}",
+    result_key="analysis_results",
+    dependencies=[TaskDependency("collect_data", "raw_data")]
+)
+
+# Task C: Independent research
+task_c = Task(
+    name="research",
+    agent=agent_c,
+    prompt_template="Research latest trends about {topic}",
+    result_key="research_results"
+)
+
+# Task D: Final summary (depends on both B and C)
+task_d = Task(
+    name="summarize",
+    agent=agent_d,
+    prompt_template="Create summary using analysis: {analysis_results} and research: {research_results}",
+    result_key="final_summary",
+    dependencies=[
+        TaskDependency("analyze_data", "analysis_results"),
+        TaskDependency("research", "research_results")
+    ]
+)
+
+# Create and execute the crew
+crew = Crew(
+    agents={
+        "data_collector": agent_a,
+        "analyzer": agent_b,
+        "researcher": agent_c,
+        "summarizer": agent_d
+    },
+    tasks=[task_a, task_b, task_c, task_d],
+    initial_context={"topic": "AI agents"}
+)
+
+# Execute with evaluation enabled
+results = crew.execute(evaluate=True)
+```
+
+In this example:
+- Task A collects initial data
+- Task B depends on A's output
+- Task C runs independently
+- Task D depends on both B and C
+
+The framework automatically:
+- Executes A and C in parallel
+- Waits for A to complete before starting B
+- Waits for both B and C to complete before starting D
+- Manages all data dependencies and context sharing
+
 ## 🔧 Advanced Usage
 
 ### Task Execution Evaluation
@@ -237,3 +316,85 @@ Join our crew! We love contributions that make our framework even better. Feel f
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details. 📜
+
+### Distributed Task Execution with Swarm
+
+SmolagentsCrew supports distributed task execution through its swarm functionality, allowing you to scale your AI operations across multiple nodes! 🌐
+
+```python
+from smolagents_crew.core import Agent, Task
+from smolagents_crew.swarm import SwarmManager, SwarmNode, serve
+
+# Create your agents
+agent1 = SimpleAgent("agent1")
+agent2 = SimpleAgent("agent2")
+
+# Set up the SwarmManager
+manager = SwarmManager()
+
+# Create and register nodes with different agents
+node1 = SwarmNode("node1", {"agent1": agent1})
+node2 = SwarmNode("node2", {"agent2": agent2})
+
+# Start node servers
+serve(node1, 50051)
+serve(node2, 50052)
+
+# Register nodes with manager
+manager.register_node("node1", "localhost:50051")
+manager.register_node("node2", "localhost:50052")
+
+# Create tasks with dependencies
+task1 = Task(
+    name="task1",
+    agent=agent1,
+    data=b"Hello from task 1"
+)
+
+task2 = Task(
+    name="task2",
+    agent=agent2,
+    data=b"Hello from task 2",
+    dependencies=[task1]  # task2 depends on task1
+)
+
+# Submit and execute tasks
+manager.submit_task(task1)
+manager.submit_task(task2)
+
+# The SwarmManager ensures tasks are executed in the correct order
+# by tracking dependencies and coordinating across nodes.
+# In this case, task2 will only start after task1 is complete,
+# even if they're running on different nodes.
+```
+
+#### Key Features of Swarm Mode 🔑
+
+- 🌍 **Distributed Execution**: Run tasks across multiple machines or nodes
+- 🔄 **Automatic Load Balancing**: Tasks are distributed based on node availability
+- 🔗 **Dependency Management**: Maintains task dependencies across distributed nodes
+- 📊 **Status Monitoring**: Track task execution status across the swarm
+- 🛡️ **Fault Tolerance**: Handles node failures and task retries
+
+#### Using SwarmCrew
+
+For easier management of distributed tasks, you can use the `SwarmCrew` class that extends the base `Crew` functionality:
+
+```python
+from smolagents_crew.swarm import SwarmCrew
+
+# Initialize SwarmCrew with your agents and tasks
+crew = SwarmCrew(
+    agents={"agent1": agent1, "agent2": agent2},
+    tasks=[task1, task2]
+)
+
+# Add remote nodes
+crew.add_node("remote1", {"agent1": agent1})
+crew.add_node("remote2", {"agent2": agent2})
+
+# Execute tasks across the swarm
+results = crew.execute(evaluate=True)
+```
+
+> 💡 The swarm functionality is perfect for scenarios requiring high throughput or when you need to distribute computation across multiple machines.

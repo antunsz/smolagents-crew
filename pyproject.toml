@@ -1,6 +1,9 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
+requires = ["hatchling", "hatch-vcs", "grpcio-tools>=1.70.0"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.hooks.custom]
+path = "build_proto.py"
 
 [project]
 name = "smolagents-crew"
@@ -16,11 +19,26 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "smolagents"
+    "smolagents",
+    "grpcio>=1.70.0",
+    "protobuf>=5.29.0"
 ]
 
 [project.optional-dependencies]
 dev = [
+    "pytest>=7.0.0",
+    "pytest-cov",
+    "black",
+    "isort",
+    "flake8"
+]
+viz = [
+    "networkx>=2.6.0",
+    "matplotlib>=3.4.0"
+]
+all = [
+    "networkx>=2.6.0",
+    "matplotlib>=3.4.0",
     "pytest>=7.0.0",
     "pytest-cov",
     "black",
@@ -36,6 +54,7 @@ smolagents = "smolagents_crew.cli:cli"
 
 [tool.hatch.build.targets.wheel]
 packages = ["smolagents_crew"]
+include = ["smolagents_crew/swarm/proto/*.proto"]
 
 [tool.hatch.version]
 source = "vcs"

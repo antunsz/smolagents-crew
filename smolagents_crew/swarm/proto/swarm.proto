@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package swarm;
+
+// Task message containing essential task information
+message TaskMessage {
+  string name = 1;
+  string agent_name = 2;
+  bytes data = 3;
+  repeated string dependencies = 4;
+}
+
+// Result message containing task execution results
+message TaskResult {
+  string status = 1;
+  bytes result = 2;
+  string error = 3;
+}
+
+// Node registration message
+message NodeInfo {
+  string node_id = 1;
+  repeated string available_agents = 2;
+  string status = 3;
+}
+
+// Node status update message
+message NodeStatus {
+  string node_id = 1;
+  string status = 2;
+  string current_task = 3;
+}
+
+// Service definition for SwarmNode
+service SwarmNodeService {
+  // Register node with manager
+  rpc RegisterNode(NodeInfo) returns (NodeStatus);
+  
+  // Execute task on node
+  rpc ExecuteTask(TaskMessage) returns (TaskResult);
+  
+  // Update node status
+  rpc UpdateStatus(NodeStatus) returns (NodeStatus);
+  
+  // Heartbeat to maintain connection
+  rpc Heartbeat(NodeInfo) returns (NodeStatus);
+}
