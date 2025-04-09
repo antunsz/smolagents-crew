@@ -312,14 +312,6 @@ Key features of advanced crew building:
 - 📊 **Visual Structure**: Print a clear overview of your crew's configuration
 - 🔄 **Fluent Interface**: Chain method calls for cleaner code
 
-## 🤝 Contributing
-
-Join our crew! We love contributions that make our framework even better. Feel free to submit a Pull Request! 💪
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details. 📜
-
 ### Distributed Task Execution with Swarm
 
 SmolagentsCrew supports distributed task execution through its swarm functionality, allowing you to scale your AI operations across multiple nodes! 🌐
@@ -441,3 +433,11 @@ results = crew.execute(evaluate=True)
 ```
 
 > 💡 The swarm functionality is perfect for scenarios requiring high throughput or when you need to distribute computation across multiple machines.
+
+## 🤝 Contributing
+
+Join our crew! We love contributions that make our framework even better. Feel free to submit a Pull Request! 💪
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details. 📜
