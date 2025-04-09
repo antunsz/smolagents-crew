@@ -78,10 +78,10 @@ from smolagents_crew import Agent, Task, Crew, TaskDependency
 from smolagents import CodeAgent, OpenAIServerModel
 
 # Create specialized agents
-agent_a = Agent("data_collector", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4'))
-agent_b = Agent("analyzer", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4'))
-agent_c = Agent("researcher", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4'))
-agent_d = Agent("summarizer", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4'))
+agent_a = Agent("data_collector", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4o-mini'))
+agent_b = Agent("analyzer", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4o-mini'))
+agent_c = Agent("researcher", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4o-mini'))
+agent_d = Agent("summarizer", agent_instance=CodeAgent, model=OpenAIServerModel('gpt-4o-mini'))
 
 # Task A: Collect initial data
 task_a = Task(
@@ -218,7 +218,7 @@ builder = CrewBuilder()
 research_agent = Agent(
     "researcher",
     agent_instance=CodeAgent,
-    model=OpenAIServerModel('gpt-4'),
+    model=OpenAIServerModel('gpt-4o-mini'),
     tools=[DuckDuckGoSearchTool()]
 )
 builder.add_agent("researcher", research_agent)
@@ -227,7 +227,7 @@ builder.add_agent("researcher", research_agent)
 writer_agent = Agent(
     "writer",
     agent_instance=CodeAgent,
-    model=OpenAIServerModel('gpt-4'),
+    model=OpenAIServerModel('gpt-4o-mini'),
     tools=[]
 )
 builder.add_agent("writer", writer_agent)
